@@ -1,3 +1,13 @@
 from django.db import models
 
-# Create your models here.
+
+class Book(models.Model):
+    class BookChoices(models.TextChoices):
+        HARD = "Hard"
+        SOFT = "Soft"
+
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=200)
+    cover = models.CharField(max_length=4, choices=BookChoices)
+    inventory = models.PositiveIntegerField()
+    daily_fee = models.DecimalField(max_digits=10, decimal_places=2)
