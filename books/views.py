@@ -17,13 +17,15 @@ class BooksViewSet(viewsets.ModelViewSet):
     permission_classes = [AdminAllOrReadOnly]
 
     def get_queryset(self):
-        self.queryset = Book.objects.all()
+        queryset = Book.objects.all()
 
         title = self.request.query_params.get("title", None)
         author = self.request.query_params.get("author", None)
 
         if title:
-            self.queryset = self.queryset.filter(title__icontains=title)
+            queryset = queryset.filter(title__icontains=title)
 
         if author:
-            self.queryset = self.queryset.filter(author__icontains=author)
+            queryset = self.queryset.filter(author__icontains=author)
+
+        return queryset
