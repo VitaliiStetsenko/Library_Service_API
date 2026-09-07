@@ -70,24 +70,19 @@ class BorrowingsViewSet(
     @action(detail=True, methods=["post"], url_path="return")
     @transaction.atomic
     def return_book(self, request, pk=None):
-        borrowing = Borrowings.objects.select_related("book", "user").get(pk=pk)
+        borrowing = self.get_object()
 
-        if request.user != borrowing.user and not request.user.is_staff:
-            return Response(
-                {"detail": "You are not the borrower of this book"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
         if borrowing.actual_return_date:
             return Response(
-                {"detail": "This borrowing has already been returned."},
+                {"detail": "Borrowing has already been returned."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         borrowing.actual_return_date = date.today()
-        borrowing.save()
+        borrowing.save(update_fields=["actual_return_date"])
 
         borrowing.book.inventory += 1
-        borrowing.book.save()
+        borrowing.book.save(update_fields=["inventory"])
 
         if borrowing.actual_return_date > borrowing.expected_return_date:
             days_overdue = (
@@ -107,3 +102,8 @@ class BorrowingsViewSet(
                 amount=fine_amount,
                 payment_type=Payment.PaymentType.FINE,
             )
+
+        return Response(
+            {"detail": "Borrowing returned successfully."},
+            status=status.HTTP_200_OK,
+        )
