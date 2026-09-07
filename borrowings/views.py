@@ -1,5 +1,8 @@
 from datetime import date
 
+from django.conf import settings
+from django.db import transaction
+
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -11,6 +14,9 @@ from borrowings.serializers import (
     BorrowingsListRetrieveSerializer,
     BorrowingsCreateSerializer,
 )
+
+from payment.models import Payment
+from payment.services import create_stripe_session
 
 
 class BorrowingsViewSet(
@@ -47,13 +53,22 @@ class BorrowingsViewSet(
             return BorrowingsCreateSerializer
         return BorrowingsListRetrieveSerializer
 
+    @transaction.atomic
     def perform_create(self, serializer):
         borrowing = serializer.save(user=self.request.user)
 
         borrowing.book.inventory -= 1
-        borrowing.book.save()
+        borrowing.book.save(update_fields=["inventory"])
+
+        create_stripe_session(
+            borrowing=borrowing,
+            request=self.request,
+            amount=borrowing.book.daily_fee,
+            payment_type=Payment.PaymentType.PAYMENT,
+        )
 
     @action(detail=True, methods=["post"], url_path="return")
+    @transaction.atomic
     def return_book(self, request, pk=None):
         borrowing = Borrowings.objects.select_related("book", "user").get(pk=pk)
 
@@ -74,7 +89,21 @@ class BorrowingsViewSet(
         borrowing.book.inventory += 1
         borrowing.book.save()
 
-        return Response(
-            self.get_serializer(borrowing).data,
-            status=status.HTTP_200_OK,
-        )
+        if borrowing.actual_return_date > borrowing.expected_return_date:
+            days_overdue = (
+                    borrowing.actual_return_date
+                    - borrowing.expected_return_date
+            ).days
+
+            fine_amount = (
+                    days_overdue
+                    * borrowing.book.daily_fee
+                    * settings.FINE_MULTIPLIER
+            )
+
+            create_stripe_session(
+                borrowing=borrowing,
+                request=request,
+                amount=fine_amount,
+                payment_type=Payment.PaymentType.FINE,
+            )
