@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "books",
-    "users"
+    "users",
+    "borrowings",
 ]
 
 AUTH_USER_MODEL = "users.User"
