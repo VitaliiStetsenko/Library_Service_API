@@ -30,7 +30,12 @@ class BorrowingsViewSet(
     permission_classes = [AdminAllAuthenticatedReadPostDelete]
 
     def get_queryset(self):
-        queryset = Borrowings.objects.select_related("book", "user")
+        queryset = (
+            Borrowings.objects
+            .select_related("book", "user")
+            .prefetch_related("payments")
+        )
+
         if not self.request.user.is_staff:
             queryset = queryset.filter(user=self.request.user)
 
