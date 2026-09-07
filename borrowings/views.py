@@ -21,6 +21,12 @@ class BorrowingsViewSet(
     queryset = Borrowings.objects.all()
     pagination_class = DefaultPagination
 
+    def get_queryset(self):
+        queryset = Borrowings.objects.all()
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(user=self.request.user)
+        return queryset
+
     def get_serializer_class(self):
         if self.action == "create":
             return BorrowingsCreateSerializer
