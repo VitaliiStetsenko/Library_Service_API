@@ -7,6 +7,7 @@ from borrowings.models import Borrowings
 
 class BorrowingsListRetrieveSerializer(serializers.ModelSerializer):
     book = BookSerializer()
+    user = serializers.CharField(read_only=True, source="user.email")
     class Meta:
         model = Borrowings
         fields = [
