@@ -21,7 +21,7 @@ class BorrowingsViewSet(
 ):
     queryset = Borrowings.objects.all()
     pagination_class = DefaultPagination
-    permission_classes = AdminAllAuthenticatedReadPostDelete
+    permission_classes = [AdminAllAuthenticatedReadPostDelete]
 
     def get_queryset(self):
         queryset = Borrowings.objects.all()
