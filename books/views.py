@@ -15,6 +15,7 @@ class DefaultPagination(PageNumberPagination):
 class BooksViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     permission_classes = [AdminAllOrReadOnly]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         queryset = Book.objects.all()
@@ -26,6 +27,6 @@ class BooksViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(title__icontains=title)
 
         if author:
-            queryset = self.queryset.filter(author__icontains=author)
+            queryset = queryset.filter(author__icontains=author)
 
         return queryset

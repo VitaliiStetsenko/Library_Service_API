@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 import os
+import stripe
 from datetime import timedelta
 from pathlib import Path
 
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     "users",
     "debug_toolbar",
     "borrowings",
+    "payment"
 ]
 
 INTERNAL_IPS = [
@@ -172,3 +174,13 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Library API",
     "VERSION": "1.0.0"
 }
+
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+
+PAYMENT_SUCCESS_URL = os.getenv("PAYMENT_SUCCESS_URL")
+PAYMENT_CANCEL_URL = os.getenv("PAYMENT_CANCEL_URL")
+
+stripe.api_key = STRIPE_SECRET_KEY
+FINE_MULTIPLIER = int(os.getenv("FINE_MULTIPLIER", "2"))
