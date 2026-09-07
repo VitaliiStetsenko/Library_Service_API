@@ -15,6 +15,7 @@ class DefaultPagination(PageNumberPagination):
 class BooksViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     permission_classes = [AdminAllOrReadOnly]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         queryset = Book.objects.all()
