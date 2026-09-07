@@ -28,4 +28,5 @@ urlpatterns = [
     path("api/users/", include("users.urls", namespace="users")),
     path("api/borrowings/", include("borrowings.urls", namespace="borrowings")),
     path("__debug__/", include("debug_toolbar.urls")),
-]
+    path("api/payments/", include("payment.urls", namespace="payment")),
+    ]
