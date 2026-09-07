@@ -19,12 +19,12 @@ class BorrowingsViewSet(
     mixins.CreateModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Borrowings.objects.all()
+    queryset = Borrowings.objects.select_related("book", "user")
     pagination_class = DefaultPagination
     permission_classes = [AdminAllAuthenticatedReadPostDelete]
 
     def get_queryset(self):
-        queryset = Borrowings.objects.all()
+        queryset = Borrowings.objects.select_related("book", "user")
         if not self.request.user.is_staff:
             queryset = queryset.filter(user=self.request.user)
 
@@ -55,7 +55,7 @@ class BorrowingsViewSet(
 
     @action(detail=True, methods=["post"], url_path="return")
     def return_book(self, request, pk=None):
-        borrowing = Borrowings.objects.get(pk=pk)
+        borrowing = Borrowings.objects.select_related("book", "user").get(pk=pk)
 
         if request.user != borrowing.user and not request.user.is_staff:
             return Response(
