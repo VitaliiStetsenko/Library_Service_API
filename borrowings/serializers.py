@@ -26,12 +26,14 @@ class BorrowingsListRetrieveSerializer(serializers.ModelSerializer):
             "payments",
         ]
 
+
 class BorrowingsCreateSerializer(serializers.ModelSerializer):
     actual_return_date = serializers.DateField(read_only=True)
     book = serializers.PrimaryKeyRelatedField(
         queryset=Book.objects.filter(inventory__gt=0)
     )
     user = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Borrowings
         fields = [

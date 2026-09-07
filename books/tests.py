@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -9,11 +9,13 @@ from books.serializers import BookSerializer
 
 BOOKS_URL = reverse("books:books-list")
 
+
 def detail_url(book_id):
     return reverse(
         "books:books-detail",
         args=(book_id,),
     )
+
 
 def sample_book(**params):
     defaults = {
@@ -25,6 +27,7 @@ def sample_book(**params):
     }
     defaults.update(params)
     return Book.objects.create(**defaults)
+
 
 class UnauthenticatedBookApiTests(TestCase):
     def setUp(self):
@@ -74,9 +77,7 @@ class UnauthenticatedBookApiTests(TestCase):
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
         )
-        self.assertTrue(
-            Book.objects.filter(id=book.id).exists()
-        )
+        self.assertTrue(Book.objects.filter(id=book.id).exists())
 
     def test_filter_by_title(self):
 
@@ -92,13 +93,8 @@ class UnauthenticatedBookApiTests(TestCase):
             {"title": "C"},
         )
 
-        serializer_with_title_1 = BookSerializer(
-            book_with_title_1
-        )
-        serializer_with_title_2 = BookSerializer(
-            book_with_title_2
-        )
-
+        serializer_with_title_1 = BookSerializer(book_with_title_1)
+        serializer_with_title_2 = BookSerializer(book_with_title_2)
 
         self.assertEqual(response_1.status_code, status.HTTP_200_OK)
 
@@ -134,13 +130,8 @@ class UnauthenticatedBookApiTests(TestCase):
             {"author": "C"},
         )
 
-        serializer_with_author_1 = BookSerializer(
-            book_with_author_1
-        )
-        serializer_with_author_2 = BookSerializer(
-            book_with_author_2
-        )
-
+        serializer_with_author_1 = BookSerializer(book_with_author_1)
+        serializer_with_author_2 = BookSerializer(book_with_author_2)
 
         self.assertEqual(response_1.status_code, status.HTTP_200_OK)
 
@@ -196,9 +187,7 @@ class AuthenticatedBookApiTests(TestCase):
             response.status_code,
             status.HTTP_403_FORBIDDEN,
         )
-        self.assertTrue(
-            Book.objects.filter(id=book.id).exists()
-        )
+        self.assertTrue(Book.objects.filter(id=book.id).exists())
 
 
 class AdminBooksApiTests(TestCase):

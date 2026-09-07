@@ -52,9 +52,7 @@ class PaymentSuccessView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        payment = Payment.objects.filter(
-            session_id=session_id
-        ).first()
+        payment = Payment.objects.filter(session_id=session_id).first()
 
         if not payment:
             return Response(
@@ -87,11 +85,7 @@ class PaymentCancelView(APIView):
 
     def get(self, request):
         return Response(
-            {
-                "detail": (
-                    "Payment was cancelled. "
-                    "You can complete it later."
-                )
-            },
+            {"detail": ("Payment was cancelled. "
+                        "You can complete it later.")},
             status=status.HTTP_200_OK,
         )

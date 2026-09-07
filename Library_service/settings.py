@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
+
 import os
 import stripe
 from datetime import timedelta
@@ -49,7 +50,7 @@ INSTALLED_APPS = [
     "users",
     "debug_toolbar",
     "borrowings",
-    "payment"
+    "payment",
 ]
 
 INTERNAL_IPS = [
@@ -153,13 +154,10 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_THROTTLE_CLASSES": [
-       "rest_framework.throttling.AnonRateThrottle",
-       "rest_framework.throttling.UserRateThrottle"
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {
-       "anon": "30/min",
-       "user": "200/min"
-    }
+    "DEFAULT_THROTTLE_RATES": {"anon": "30/min", "user": "200/min"},
 }
 
 SIMPLE_JWT = {
@@ -172,7 +170,7 @@ SIMPLE_JWT = {
 SPECTACULAR_SETTINGS = {
     "TITLE": "Library Service API",
     "DESCRIPTION": "Library API",
-    "VERSION": "1.0.0"
+    "VERSION": "1.0.0",
 }
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
