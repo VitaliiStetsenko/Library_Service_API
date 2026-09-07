@@ -18,7 +18,7 @@ class PaymentViewSet(
     def get_queryset(self):
         queryset = Payment.objects.select_related(
             "borrowing",
-            "book",
+            "borrowing__book",
             "user",
         )
 
