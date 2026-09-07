@@ -1,0 +1,21 @@
+[run]
+source = books,users,borrowings
+omit =
+    */migrations/*
+    */tests.py
+    */admin.py
+    */apps.py
+    manage.py
+    Library_service/asgi.py
+    Library_service/wsgi.py
+
+[report]
+show_missing = True
+skip_covered = False
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+
+[html]
+directory = htmlcov
