@@ -33,7 +33,9 @@ class BorrowingsViewSet(
         queryset = (
             Borrowings.objects
             .select_related("book", "user")
-            .prefetch_related("payments")
+            .prefetch_related(
+                "payments"
+            )
         )
 
         if not self.request.user.is_staff:
@@ -91,14 +93,13 @@ class BorrowingsViewSet(
 
         if borrowing.actual_return_date > borrowing.expected_return_date:
             days_overdue = (
-                    borrowing.actual_return_date
-                    - borrowing.expected_return_date
+                borrowing.actual_return_date - borrowing.expected_return_date
             ).days
 
             fine_amount = (
-                    days_overdue
-                    * borrowing.book.daily_fee
-                    * settings.FINE_MULTIPLIER
+                days_overdue
+                * borrowing.book.daily_fee
+                * settings.FINE_MULTIPLIER
             )
 
             create_stripe_session(

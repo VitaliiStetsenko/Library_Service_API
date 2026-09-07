@@ -11,7 +11,6 @@ from books.models import Book
 from borrowings.models import Borrowings
 from borrowings.serializers import BorrowingsListRetrieveSerializer
 
-
 BORROWINGS_URL = reverse("borrowings:borrowings-list")
 
 
@@ -77,9 +76,7 @@ class UnauthenticatedBorrowingsApiTests(TestCase):
             book=book,
         )
 
-        response = self.client.get(
-            detail_url(borrowing.id)
-        )
+        response = self.client.get(detail_url(borrowing.id))
 
         self.assertEqual(
             response.status_code,
@@ -92,7 +89,8 @@ class UnauthenticatedBorrowingsApiTests(TestCase):
 
         payload = {
             "expected_return_date": (
-                date.today() + timedelta(days=7)
+                    date.today()
+                    + timedelta(days=7)
             ).isoformat(),
             "book": book.id,
         }
@@ -154,9 +152,7 @@ class AuthenticatedBorrowingsApiTests(TestCase):
             1,
         )
 
-        serializer = BorrowingsListRetrieveSerializer(
-            own_borrowing
-        )
+        serializer = BorrowingsListRetrieveSerializer(own_borrowing)
 
         self.assertIn(
             serializer.data,
@@ -164,11 +160,7 @@ class AuthenticatedBorrowingsApiTests(TestCase):
         )
 
         self.assertNotIn(
-            {
-                **BorrowingsListRetrieveSerializer(
-                    other_borrowing
-                ).data
-            },
+            {**BorrowingsListRetrieveSerializer(other_borrowing).data},
             response.data["results"],
         )
 
@@ -180,9 +172,7 @@ class AuthenticatedBorrowingsApiTests(TestCase):
             book=book,
         )
 
-        response = self.client.get(
-            detail_url(borrowing.id)
-        )
+        response = self.client.get(detail_url(borrowing.id))
 
         self.assertEqual(
             response.status_code,
@@ -197,9 +187,7 @@ class AuthenticatedBorrowingsApiTests(TestCase):
             book=book,
         )
 
-        response = self.client.get(
-            detail_url(borrowing.id)
-        )
+        response = self.client.get(detail_url(borrowing.id))
 
         self.assertEqual(
             response.status_code,
@@ -242,16 +230,12 @@ class AuthenticatedBorrowingsApiTests(TestCase):
         )
 
         self.assertIn(
-            BorrowingsListRetrieveSerializer(
-                active_borrowing
-            ).data,
+            BorrowingsListRetrieveSerializer(active_borrowing).data,
             response.data["results"],
         )
 
         self.assertNotIn(
-            BorrowingsListRetrieveSerializer(
-                returned_borrowing
-            ).data,
+            BorrowingsListRetrieveSerializer(returned_borrowing).data,
             response.data["results"],
         )
 
@@ -291,16 +275,12 @@ class AuthenticatedBorrowingsApiTests(TestCase):
         )
 
         self.assertIn(
-            BorrowingsListRetrieveSerializer(
-                returned_borrowing
-            ).data,
+            BorrowingsListRetrieveSerializer(returned_borrowing).data,
             response.data["results"],
         )
 
         self.assertNotIn(
-            BorrowingsListRetrieveSerializer(
-                active_borrowing
-            ).data,
+            BorrowingsListRetrieveSerializer(active_borrowing).data,
             response.data["results"],
         )
 
@@ -338,16 +318,12 @@ class AuthenticatedBorrowingsApiTests(TestCase):
         )
 
         self.assertIn(
-            BorrowingsListRetrieveSerializer(
-                own_borrowing
-            ).data,
+            BorrowingsListRetrieveSerializer(own_borrowing).data,
             response.data["results"],
         )
 
         self.assertNotIn(
-            BorrowingsListRetrieveSerializer(
-                other_borrowing
-            ).data,
+            BorrowingsListRetrieveSerializer(other_borrowing).data,
             response.data["results"],
         )
 
@@ -363,9 +339,7 @@ class AuthenticatedBorrowingsApiTests(TestCase):
             actual_return_date=None,
         )
 
-        response = self.client.post(
-            return_url(borrowing.id)
-        )
+        response = self.client.post(return_url(borrowing.id))
 
         self.assertEqual(
             response.status_code,
@@ -397,9 +371,7 @@ class AuthenticatedBorrowingsApiTests(TestCase):
             actual_return_date=None,
         )
 
-        response = self.client.post(
-            return_url(borrowing.id)
-        )
+        response = self.client.post(return_url(borrowing.id))
 
         self.assertEqual(
             response.status_code,
@@ -430,9 +402,7 @@ class AuthenticatedBorrowingsApiTests(TestCase):
             actual_return_date=date.today(),
         )
 
-        response = self.client.post(
-            return_url(borrowing.id)
-        )
+        response = self.client.post(return_url(borrowing.id))
 
         self.assertEqual(
             response.status_code,
@@ -506,16 +476,12 @@ class AdminBorrowingsApiTests(TestCase):
         )
 
         self.assertIn(
-            BorrowingsListRetrieveSerializer(
-                borrowing_1
-            ).data,
+            BorrowingsListRetrieveSerializer(borrowing_1).data,
             response.data["results"],
         )
 
         self.assertIn(
-            BorrowingsListRetrieveSerializer(
-                borrowing_2
-            ).data,
+            BorrowingsListRetrieveSerializer(borrowing_2).data,
             response.data["results"],
         )
 
@@ -553,16 +519,12 @@ class AdminBorrowingsApiTests(TestCase):
         )
 
         self.assertIn(
-            BorrowingsListRetrieveSerializer(
-                borrowing_1
-            ).data,
+            BorrowingsListRetrieveSerializer(borrowing_1).data,
             response.data["results"],
         )
 
         self.assertNotIn(
-            BorrowingsListRetrieveSerializer(
-                borrowing_2
-            ).data,
+            BorrowingsListRetrieveSerializer(borrowing_2).data,
             response.data["results"],
         )
 
@@ -602,16 +564,12 @@ class AdminBorrowingsApiTests(TestCase):
         )
 
         self.assertIn(
-            BorrowingsListRetrieveSerializer(
-                active_borrowing
-            ).data,
+            BorrowingsListRetrieveSerializer(active_borrowing).data,
             response.data["results"],
         )
 
         self.assertNotIn(
-            BorrowingsListRetrieveSerializer(
-                returned_borrowing
-            ).data,
+            BorrowingsListRetrieveSerializer(returned_borrowing).data,
             response.data["results"],
         )
 
@@ -651,18 +609,15 @@ class AdminBorrowingsApiTests(TestCase):
         )
 
         self.assertIn(
-            BorrowingsListRetrieveSerializer(
-                returned_borrowing
-            ).data,
+            BorrowingsListRetrieveSerializer(returned_borrowing).data,
             response.data["results"],
         )
 
         self.assertNotIn(
-            BorrowingsListRetrieveSerializer(
-                active_borrowing
-            ).data,
+            BorrowingsListRetrieveSerializer(active_borrowing).data,
             response.data["results"],
         )
+
     def test_admin_can_return_any_borrowing(self):
         book = sample_book(
             title="admin_return_book",
@@ -675,9 +630,7 @@ class AdminBorrowingsApiTests(TestCase):
             actual_return_date=None,
         )
 
-        response = self.client.post(
-            return_url(borrowing.id)
-        )
+        response = self.client.post(return_url(borrowing.id))
 
         self.assertEqual(
             response.status_code,

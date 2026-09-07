@@ -7,4 +7,3 @@ class Borrowings(models.Model):
     actual_return_date = models.DateField(null=True, blank=True)
     book = models.ForeignKey("books.Book", on_delete=models.CASCADE)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
-

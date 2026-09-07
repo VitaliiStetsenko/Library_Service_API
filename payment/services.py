@@ -10,13 +10,10 @@ def create_stripe_session(
     payment_type,
 ):
     success_url = request.build_absolute_uri(
-        "/api/payments/success/"
-        "?session_id={CHECKOUT_SESSION_ID}"
+        "/api/payments/success/" "?session_id={CHECKOUT_SESSION_ID}"
     )
 
-    cancel_url = request.build_absolute_uri(
-        "/api/payments/cancel/"
-    )
+    cancel_url = request.build_absolute_uri("/api/payments/cancel/")
 
     checkout_session = stripe.checkout.Session.create(
         mode="payment",
@@ -27,9 +24,7 @@ def create_stripe_session(
                     "product_data": {
                         "name": borrowing.book.title,
                     },
-                    "unit_amount": int(
-                        Decimal(amount) * Decimal("100")
-                    ),
+                    "unit_amount": int(Decimal(amount) * Decimal("100")),
                 },
                 "quantity": 1,
             }
