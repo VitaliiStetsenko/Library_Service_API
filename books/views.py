@@ -27,6 +27,6 @@ class BooksViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(title__icontains=title)
 
         if author:
-            queryset = self.queryset.filter(author__icontains=author)
+            queryset = queryset.filter(author__icontains=author)
 
         return queryset
