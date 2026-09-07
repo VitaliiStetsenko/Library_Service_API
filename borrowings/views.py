@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from books.views import DefaultPagination
 from borrowings.models import Borrowings
+from borrowings.permissions import AdminAllAuthenticatedReadPostDelete
 from borrowings.serializers import (
     BorrowingsListRetrieveSerializer,
     BorrowingsCreateSerializer,
@@ -20,6 +21,7 @@ class BorrowingsViewSet(
 ):
     queryset = Borrowings.objects.all()
     pagination_class = DefaultPagination
+    permission_classes = AdminAllAuthenticatedReadPostDelete
 
     def get_queryset(self):
         queryset = Borrowings.objects.all()
